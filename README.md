@@ -6,14 +6,14 @@ with created access and permitions.
 
 So you can add keys in Docker file like that:
 
-"# AWS S3 Keys
+\# AWS S3 Keys 
 ARG S3_ACCESS_KEY=
 ARG S3_SECRET_KEY=
 ARG BUCKET=
-# Storj Keys
+\# Storj Keys
 ARG STORJ_ACCESS_KEY=
 ARG STORJ_SECRET_KEY=
-ARG STORJ_END_POINT=https://gateway.storjshare.io"
+ARG STORJ_END_POINT=https://gateway.storjshare.io
 
 Or like Variable.
 
