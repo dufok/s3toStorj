@@ -13,6 +13,9 @@ ARG STORJ_ACCESS_KEY=🗝 \
 ARG STORJ_SECRET_KEY=🗝 \
 ARG STORJ_END_POINT=https://gateway.storjshare.io \
 
-Or like Variable.
+If you use dokku then
+dokku config:set $APP_NAME S3_ACCESS_KEY=🗝 S3_SECRET_KEY=🗝 STORJ_ACCESS_KEY=🗝 STORJ_ACCESS_KEY=🗝 STORJ_SECRET_KEY=🗝 STORJ_END_POINT=https://gateway.storjshare.io BUCKET=🗝
+
+Or like Variable in Vercel
 
 Don't forget to prepare you Storj bucket =)
