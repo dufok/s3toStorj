@@ -49,7 +49,7 @@ with open('/output/s3_contex_new.txt') as file1, open('/output/s3_contex_old.txt
     file1_contents = file1.read()
     file2_contents = file2.read()
     differences = list(difflib.context_diff(file1_contents.splitlines(), file2_contents.splitlines()))
-    filtered_lines = [line[1:].lstrip() for line in differences if line.startswith("-") and not line.startswith("---")]
+    filtered_lines = [line[1:].lstrip() for line in differences if line.startswith("-") and not line.startswith("---") and not line.endswith("/")]
     output_file.writelines(line + '\n' for line in filtered_lines)
 
 #  cheak work of difference metod
@@ -68,7 +68,6 @@ temp_dir = tempfile.TemporaryDirectory()
 for file_route in files_list:
     directory = os.path.dirname(temp_dir.name + '/' + file_route)
     file_path = temp_dir.name + '/' + file_route
-
     if not os.path.exists(directory):
         os.makedirs(directory)
     else:
