@@ -68,14 +68,15 @@ temp_dir = tempfile.TemporaryDirectory()
 for file_route in files_list:
     directory = os.path.dirname(temp_dir.name + '/' + file_route)
     file_path = temp_dir.name + '/' + file_route
+
     if not os.path.exists(directory):
-        if os.path.isfile(file_path):
-            temp_name = file_path + ".temp"
-            os.rename(file_path, temp_name)
+        os.makedirs(directory)
+    else:
+        if os.path.isfile(directory):
+            temp_name = directory + ".temp"
+            os.rename(directory, temp_name)
             os.makedirs(directory)
-            os.rename(temp_name, file_path)
-        else:
-            os.makedirs(directory)
+            os.rename(temp_name, directory)
 
     # Download the file from the first S3 account
     with open(file_path, 'wb') as f:
@@ -94,6 +95,7 @@ for file_route in files_list:
             Key=file_route
             )
     print(f'{file_route} uploaded to {bucket}')
+    temp_dir.cleanup()
 
 # Delete the temporary directory
 temp_dir.cleanup()
