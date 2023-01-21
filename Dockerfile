@@ -3,5 +3,4 @@ FROM python:3.10
 RUN mkdir ./output
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY migration.py ./
-CMD [ "python3", "migration.py"]
+CMD [ "python3", "s3tostorj.py"]
