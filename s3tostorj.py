@@ -1,7 +1,5 @@
 import boto3
-from botocore.exceptions import ClientError
 import os
-import filecmp
 import tempfile
 import difflib
 
@@ -31,9 +29,9 @@ def list_creator(client, bucket, filename):
                 file.write(key['Key'] + "\n")
 
 #  make list content of S3
-list_creator(s3, '/output/s3_contex_s3.txt')
+list_creator(s3, bucket, '/output/s3_content.txt')
 #  make list content of Storj
-list_creator(storj, '/output/s3_contex_storj.txt')
+list_creator(storj, bucket, '/output/storj_content.txt')
 
 # Compare two files
 def compare(filename2, filename1, outputfile):
@@ -52,19 +50,23 @@ compare('/output/s3_content.txt', '/output/storj_content.txt', '/output/diff_con
 print('diff creted')
 
 if os.path.isfile('/output/diff_content.txt') and os.path.getsize('/output/diff_content.txt') > 0:
-    print("Differences were written to /output/content.txt")
+    print("Differences were written to /output/diff_content.txt")
 else:
     print("No differences found or failed to write the differences.")
     raise SystemExit
 
-# Read the list of files from the content.txt file
-with open('/output/diff_content.txt', 'r') as f:
-    files_list = f.read().splitlines()
+
 # Create a temporary directory
 temp_dir = tempfile.TemporaryDirectory()
 
+# Read the list of files from the content.txt file
+with open('/output/diff_content.txt', 'r') as f:
+    files_list = f.read().splitlines()
+
 for file_route in files_list:
     file_path = temp_dir.name + '/' + file_route
+    directory = os.path.dirname(temp_dir.name + '/' + file_route)
+    os.makedirs(directory)
     # Download the file from the first S3 account
     with open(file_path, 'wb') as f:
         s3.download_fileobj(
