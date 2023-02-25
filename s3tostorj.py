@@ -65,8 +65,8 @@ with open('/output/diff_content.txt', 'r') as f:
 
 for file_route in files_list:
     file_path = temp_dir.name + '/' + file_route
-    directory = os.path.dirname(temp_dir.name + '/' + file_route)
-    os.makedirs(directory)
+    directory = os.path.dirname(file_path)
+    os.makedirs(directory, exist_ok=True)
     # Download the file from the first S3 account
     with open(file_path, 'wb') as f:
         s3.download_fileobj(
