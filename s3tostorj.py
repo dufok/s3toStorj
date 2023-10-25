@@ -2,6 +2,9 @@ import boto3
 import os
 import tempfile
 import difflib
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Make Working SetUp
 
@@ -17,7 +20,7 @@ storj = boto3.client('s3',
                      )
 
 bucket = os.environ['BUCKET']
-
+logging.info(f'Bucket: {bucket}')
 
 def list_creator(client, bucket, filename):
     paginator = client.get_paginator('list_objects_v2')
@@ -27,6 +30,7 @@ def list_creator(client, bucket, filename):
         for page in pages:
             for key in page['Contents']:
                 file.write(key['Key'] + "\n")
+    logging.info(f'Creating list for bucket: {bucket}, filename: {filename}')
 
 #  make list content of S3
 list_creator(s3, bucket, '/output/s3_content.txt')
@@ -45,6 +49,7 @@ def compare(filename2, filename1, outputfile):
         for line in added:
             if line not in removed:
                 output_file.writelines(line + '\n')
+    logging.info(f'Comparing files: {filename1}, {filename2}')
 
 compare('/output/s3_content.txt', '/output/storj_content.txt', '/output/diff_content.txt')
 print('diff creted')
@@ -52,7 +57,7 @@ print('diff creted')
 if os.path.isfile('/output/diff_content.txt') and os.path.getsize('/output/diff_content.txt') > 0:
     print("Differences were written to /output/diff_content.txt")
 else:
-    print("No differences found or failed to write the differences.")
+    logging.error("No differences found or failed to write the differences.")
     raise SystemExit
 
 
@@ -68,29 +73,37 @@ for file_route in files_list:
     directory = os.path.dirname(file_path)
     os.makedirs(directory, exist_ok=True)
     # Download the file from the first S3 account
-    with open(file_path, 'wb') as f:
-        s3.download_fileobj(
-            Bucket=bucket,
-            Key=file_route,
-            Fileobj=f
-        )
-    print(f'{file_route} downloaded from {bucket}')
+    try:
+        with open(file_path, 'wb') as f:
+            s3.download_fileobj(
+                Bucket=bucket,
+                Key=file_route,
+                Fileobj=f
+            )
+        logging.info(f'{file_route} downloaded from {bucket}')
+    except Exception as e:
+        logging.error(f'Failed to download {file_route} from {bucket}: {e}')
 
     # Upload the file to the second S3 account
-    with open(file_path, 'rb') as f:
-        storj.upload_fileobj(
-            Fileobj=f,
-            Bucket=bucket,
-            Key=file_route
-            )
-    print(f'{file_route} uploaded to {bucket}')
+    try:
+        with open(file_path, 'rb') as f:
+            storj.upload_fileobj(
+                Fileobj=f,
+                Bucket=bucket,
+                Key=file_route
+                )
+        logging.info(f'{file_route} uploaded to {bucket}')
+    except Exception as e:
+        logging.error(f'Failed to upload {file_route} to {bucket}: {e}')
     temp_dir.cleanup()
 
 # Delete the temporary directory
 temp_dir.cleanup()
+logging.info('Temporary directory deleted')
 
 # Clen Up directory
 files = os.listdir('/output')
+logging.info('Cleaned up output directory')
 
 # Iterate over the files
 for file in files:
