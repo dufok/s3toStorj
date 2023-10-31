@@ -42,8 +42,8 @@ def compare(filename2, filename1, added_file, removed_file):
         file1_lines = set(file1.read().splitlines())
         file2_lines = set(file2.read().splitlines())
 
-    added = file1_lines - file2_lines
-    removed = file2_lines - file1_lines
+    added = file2_lines - file1_lines
+    removed = file1_lines - file2_lines
 
     with open(added_file, 'w') as added_file_obj:
         for line in added:
