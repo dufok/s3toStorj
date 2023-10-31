@@ -28,9 +28,6 @@ def list_creator(client, bucket, filename):
         for page in pages:
             for key in page['Contents']:
                 file_path = key['Key']
-                # Ensure the file_path starts with 'production/image/'
-                if not file_path.startswith('production/image/'):
-                    logging.error(f'Incorrect file path: {file_path}')
                 file.write(file_path + "\n")
     logging.info(f'Creating list for bucket: {bucket}, filename: {filename}')
 
