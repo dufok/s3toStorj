@@ -64,6 +64,7 @@ def search_file(client, bucket, filename):
             Bucket=bucket,
             Prefix=filename
         )
+        logging.info(f'Response received: {response}')  # Log the entire response
         if 'Contents' in response and response['Contents']:
             logging.info(f'{filename} found in {bucket}')
             return True
@@ -73,6 +74,7 @@ def search_file(client, bucket, filename):
     except Exception as e:
         logging.error(f'Error searching for {filename} in {bucket}: {e}')
         return False
+
 
 # Read the list of added files
 with open('/output/diff_added.txt', 'r') as f:
