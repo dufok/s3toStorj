@@ -54,13 +54,16 @@ def compare(filename2, filename1, added_file, removed_file):
     logging.info(f'Comparing files: {filename1}, {filename2}')
 
 compare('/output/s3_content.txt', '/output/storj_content.txt', '/output/diff_added.txt', '/output/diff_removed.txt')
-print('diff creted')
+print('diff created')
 
-if os.path.isfile('/output/diff_content.txt') and os.path.getsize('/output/diff_content.txt') > 0:
-    print("Differences were written to /output/diff_content.txt")
+# Check if either of the diff files exists and has content
+if (os.path.isfile('/output/diff_added.txt') and os.path.getsize('/output/diff_added.txt') > 0) or \
+   (os.path.isfile('/output/diff_removed.txt') and os.path.getsize('/output/diff_removed.txt') > 0):
+    print("Differences were written to /output/diff_added.txt and /output/diff_removed.txt")
 else:
     logging.error("No differences found or failed to write the differences.")
     raise SystemExit
+
 
 
 # Create a temporary directory
