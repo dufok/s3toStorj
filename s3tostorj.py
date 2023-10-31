@@ -1,7 +1,6 @@
 import boto3
 import os
 import tempfile
-import difflib
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
