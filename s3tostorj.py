@@ -39,22 +39,26 @@ list_creator(storj, bucket, '/output/storj_content.txt')
 
 # Compare two files
 def compare(filename2, filename1, added_file, removed_file):
-    with open(filename1) as file1, open(filename2) as file2, \
-         open(added_file, 'w') as added_file_obj, open(removed_file, 'w') as removed_file_obj:
-        file1 = file1.read()
-        file2 = file2.read()
-        difference = difflib.unified_diff(file1.splitlines(), file2.splitlines(), lineterm='', n=0)
-        lines = list(difference)[2:]
-        added = [line[1:] for line in lines if line[0] == '+' and not line.endswith("/")]
-        removed = [line[1:] for line in lines if line[0] == '-' and not line.endswith("/")]
+    with open(filename1) as file1, open(filename2) as file2:
+        file1_lines = set(file1.read().splitlines())
+        file2_lines = set(file2.read().splitlines())
+
+    added = file1_lines - file2_lines
+    removed = file2_lines - file1_lines
+
+    with open(added_file, 'w') as added_file_obj:
         for line in added:
             added_file_obj.writelines(line + '\n')
+
+    with open(removed_file, 'w') as removed_file_obj:
         for line in removed:
             removed_file_obj.writelines(line + '\n')
+
     logging.info(f'Comparing files: {filename1}, {filename2}')
 
 compare('/output/s3_content.txt', '/output/storj_content.txt', '/output/diff_added.txt', '/output/diff_removed.txt')
 print('diff created')
+
 
 # Check if either of the diff files exists and has content
 if (os.path.isfile('/output/diff_added.txt') and os.path.getsize('/output/diff_added.txt') > 0) or \
