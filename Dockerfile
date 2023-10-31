@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY s3tostorj.py ./
 COPY find.py ./
 # For testing and find files in the bucket use find.py
-CMD [ "python3", "s3tostorj.py"]
+CMD [ "python3", "find.py"]
