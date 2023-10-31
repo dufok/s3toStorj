@@ -25,3 +25,5 @@ Or like Variable in Vercel
 
 
 Don't forget to prepare you Storj bucket =)
+
+### Added Gitea CI config file but i think it can be used for any CI
