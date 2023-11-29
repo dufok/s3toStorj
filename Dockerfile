@@ -1,9 +1,12 @@
-FROM python:3.10
-# add mount point
-RUN mkdir ./output
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-COPY s3tostorj.py ./
-COPY find.py ./
-# For testing and find files in the bucket use find.py
-CMD [ "python3", "s3tostorj.py"]
+FROM python:slim
+WORKDIR /app
+COPY . /app
+
+RUN apt-get update && apt-get install -y git gcc curl postgresql && \
+    curl -sSL https://install.python-poetry.org | python - && \
+    echo "export PATH=$PATH:/root/.local/bin" >> ~/.bashrc && \
+    . ~/.bashrc && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-dev
+
+CMD ["python", "s3tostorj.py"]
