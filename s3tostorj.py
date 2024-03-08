@@ -26,6 +26,7 @@ logging.info(f"Bucket: {bucket}")
 
 
 def list_creator(client, bucket, filename):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     paginator = client.get_paginator("list_objects_v2")
     pages = paginator.paginate(Bucket=bucket)
 
