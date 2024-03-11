@@ -39,7 +39,7 @@ def search_file(client, bucket, filename):
 
 
 # Specify the name of the file you're searching for
-filename = "production/image/d509bd40-74d7-11ee-a148-737a7ac02eda.png"
+filename = "production/audio/c40c9270-03bb-11ee-ac97-630f0de74335.mp3"
 
 # Search for the file in both S3 and Storj
 file_in_s3 = search_file(s3, bucket, filename)
