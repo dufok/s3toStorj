@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y git gcc curl postgresql && \
     poetry config virtualenvs.create false && \
     poetry install --no-dev
 
-CMD ["python", "find.py"]
+CMD ["python", "s3tostorj.py"]
