@@ -25,6 +25,21 @@ bucket = os.environ["BUCKET"]
 logging.info(f"Bucket: {bucket}")
 
 
+# Clean up the output directory
+def clean_output_directory(directory):
+    if os.path.exists(directory):
+        files = os.listdir(directory)
+        for file in files:
+            file_path = os.path.join(directory, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        logging.info("Cleaned up output directory")
+    else:
+        os.makedirs(directory)
+        logging.info(f"Created directory: {directory}")
+
+
+
 def list_creator(client, bucket, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     paginator = client.get_paginator("list_objects_v2")
@@ -35,13 +50,6 @@ def list_creator(client, bucket, filename):
             for key in page["Contents"]:
                 file.write(key["Key"] + "\n")
     logging.info(f"Creating list for bucket: {bucket}, filename: {filename}")
-
-
-#  make list content of S3
-list_creator(s3, bucket, "/output/s3_content.txt")
-#  make list content of Storj
-list_creator(storj, bucket, "/output/storj_content.txt")
-
 
 # Compare two files
 def compare(filename2, filename1, added_file, removed_file):
@@ -62,6 +70,12 @@ def compare(filename2, filename1, added_file, removed_file):
 
     logging.info(f"Comparing files: {filename1}, {filename2}")
 
+# Call the function at the beginning of your script
+clean_output_directory("/output")
+#  make list content of S3
+list_creator(s3, bucket, "/output/s3_content.txt")
+#  make list content of Storj
+list_creator(storj, bucket, "/output/storj_content.txt")
 
 compare("/output/s3_content.txt", "/output/storj_content.txt", "/output/diff_added.txt", "/output/diff_removed.txt")
 logging.info("diff created")

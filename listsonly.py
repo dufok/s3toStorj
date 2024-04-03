@@ -22,6 +22,18 @@ storj = boto3.client(
 bucket = os.environ["BUCKET"]
 logging.info(f"Bucket: {bucket}")
 
+# Clean up the output directory
+def clean_output_directory(directory):
+    if os.path.exists(directory):
+        files = os.listdir(directory)
+        for file in files:
+            file_path = os.path.join(directory, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        logging.info("Cleaned up output directory")
+    else:
+        os.makedirs(directory)
+        logging.info(f"Created directory: {directory}")
 
 def list_creator(client, bucket, filename):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -34,7 +46,8 @@ def list_creator(client, bucket, filename):
                 file.write(key["Key"] + "\n")
     logging.info(f"Creating list for bucket: {bucket}, filename: {filename}")
 
-
+# Call the function at the beginning of your script
+clean_output_directory("/output")
 #  make list content of S3
 list_creator(s3, bucket, "/output/s3_content.txt")
 #  make list content of Storj
