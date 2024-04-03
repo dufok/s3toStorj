@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y git gcc curl postgresql && \
     poetry config virtualenvs.create false && \
     poetry install --no-dev
 
-CMD ["python", "listonly.py"]
+CMD ["python", "listsonly.py"]
