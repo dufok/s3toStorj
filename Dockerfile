@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y git gcc curl postgresql && \
     echo "export PATH=$PATH:/root/.local/bin" >> ~/.bashrc && \
     . ~/.bashrc && \
     poetry config virtualenvs.create false && \
-    poetry install --no-dev
+    poetry install --no-dev && \
+    pip install python-dotenv
 
-CMD ["python", "s3tostorj.py"]
+#CMD ["python", "storjtostorj.py"]
+CMD /bin/bash -c "python storjtostorj.py"

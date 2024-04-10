@@ -28,26 +28,12 @@ storj_destination = boto3.client(
 bucket = os.getenv("BUCKET")
 logging.info(f"Bucket: {bucket}")
 
-def list_creator(client, bucket, filename):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    paginator = client.get_paginator("list_objects_v2")
-    pages = paginator.paginate(Bucket=bucket)
-
-    with open(filename, "a") as file:
-        for page in pages:
-            for key in page["Contents"]:
-                file.write(key["Key"] + "\n")
-    logging.info(f"Creating list for bucket: {bucket}, filename: {filename}")
-
-
-#  make list content of source bucket
-list_creator(storj_source, bucket, "/output/source_content.txt")
 
 # Create a temporary directory
 temp_dir = tempfile.TemporaryDirectory()
 
 # Read the list of files from the content.txt file
-with open("/output/source_content.txt", "r") as f:
+with open("problem_files.txt", "r") as f:
     files_to_add = f.read().splitlines()
 
 url_mapping = {}

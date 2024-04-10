@@ -3,3 +3,6 @@
 .DS_Store
 poetry.lock
 __pychache__
+.devcontainer/devcontainer.json
+.env
+problem_files.txt
